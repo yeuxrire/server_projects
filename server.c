@@ -1,3 +1,4 @@
+#define _XPOEN_SOURCE 700
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,10 +8,28 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
+void child_handler(int sig) {
+    int status;
+    pid_t pid;
+    while((pid == waitpid(-1, &status, WNOHANG)) > 0) {
+        printf("Child Process %d terminated.\n", pid);
+        fflush(stdout);
+    }
+}
+
 int main() {
     int server_fd, client_fd;
     struct sockaddr_in server_addr, client_addr;
     socklen_t client_addr_len = sizeof(client_addr);
+
+    struct sigaction sa;
+    sa.sa_handler = child_handler;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART;
+    if (sigaction(SIGCHLD, &sa, NULL) == -1) {
+        perror("sigaction failed");
+        exit(1);
+    }
 
     server_fd = socket(AF_INET, SOCK_STREAM, 0);
 
