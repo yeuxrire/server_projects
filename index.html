@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset = "UTF-8">
+        <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
+        <title>My C Web Server</title>
+        <style>
+            :root {
+                --primary-color: #2b6cb0;
+                --bg-color: #f7fafc;
+                --text-color: #2d3748;
+            }
+            body {
+                font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+                background-color: var(--bg-color);
+                color: var(--text-color);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+                line-height: 1.6;
+            }
+            .container {
+                background-color: white;
+                padding: 40px;
+                border-radius: 16px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+                max-width: 600px;
+                text-align: center;
+                border-top: 6px solid var(--primary-color);
+            }
+            h1 {
+                color: var(--primary-color);
+                margin-top: 0;
+                font-size: 2.2rem;
+            }
+            .status-badge {
+                display: inline-block;
+                background-color: #c6f6d5;
+                color: #22543d;
+                padding: 6px 16px;
+                border-radius: 999px;
+                font-weight: bold;
+                font-size: 0.9rem;
+                margin-bottom: 20px;
+                animation: pulse 2s infinite;
+            }
+            .feature-list {
+                text-align: left;
+                background-color: #edf2f7;
+                padding: 20px 30px;
+                border-radius: 8px;
+                margin: 25px o;
+            }
+            .feature-list {
+                margin: 0 0 10px 0;
+                font-weight: bold;
+                color: #4a5568;
+            }
+            ul {
+                margin: 0;
+                padding-left: 20px;
+            }
+            li {
+                margin-bottom: 8px;
+            }
+            .footer {
+                margin-top: 30px;
+                font-size: 0.85rem;
+                color: #a0aec0;
+            }
+            @keyframes pulse {
+                0% { box-shadow: 0 0 0 0 rgba(72, 187, 120, 0.4);}
+                70% { box-shadow: 0 0 0 10px rgba(72, 187, 120, 0);}
+                100% { box-shadow: 0 0 0 0 rgba(72, 187, 120, 0);}
+            }
+        </style>
+    </head>
+    <body>
+        <div class = "container">
+            <div class = "status-badge">Server Online</div>
+            <h1>Web Server Launched!</h1>
+            <p>If you are seeing this screen, it means your custom HTTP static web server written in C is perfectly integrated with the <strong>local file (File I/O)</strong> and has successfully transmitted an HTML file to your browser.</p>
+
+            <div class = "feature-list">
+                <p> Current Server Features</p>
+                <ul>
+                    <li><strong>Socket API:</strong> Network communication with clients</li>
+                    <li><strong>HTTP Parsing:</strong> Request header analysis and processing</li>
+                    <li><strong>System Calls:</strong> Utilizing <code>open()</code>, <code>read()</code>, and <code>fstat()</code></li>
+                    <li><strong>MIME Type:</strong> Dynamic header generation based on file extensions</li>
+                    <li><strong>Byte Stream:</strong> Memory-efficient chunked transmission</li>
+                </ul>
+            </div>
+
+            <p>Now, try placing an image (.jpg) or other files in the server directory, and test if file parsing works by typing <code>/filename.jpg</code> in your address bar!</p>
+            
+            <div class = "footer">
+                Powered by Custom C Web Server
+            </div>
+        </div>
+    </body>
+</html>

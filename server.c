@@ -7,6 +7,7 @@
 #include <sys/wait.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include "http_parser.h"
 
 int server_fd;
 
@@ -73,14 +74,10 @@ int main() {
         if (pid == 0) {
             close(server_fd);
 
-            char buffer[1024];
-            int read_len;
             printf("[Child %d] Connected to client.\n", getpid());
 
-            while((read_len = read(client_fd, buffer, sizeof(buffer))) > 0) {
-                write(client_fd, buffer, read_len);
-            }
-
+            handle_http_request(client_fd);
+            
             printf("[Child %d] Client is disconnected.\n", getpid());
 
             close(client_fd);
