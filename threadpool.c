@@ -6,6 +6,7 @@
 #include "http_parser.h"
 
 #define THREAD_POOL_SIZE 8
+#define MAX_QUEUE_SIZE 1000
 
 typedef struct Task {
     int client_fd;
@@ -72,11 +73,28 @@ void init_thread_pool() {
 }
 
 void pool_submit(int client_fd) {
+    pthread_mutex_lock(&pool.lock);
+
+    if (pool.count >= MAX_QUEUE_SIZE) {
+        printf("[Warning] Task queue is full! Rejecting connection. (FD: %d)\n", client_fd);
+        pthread_mutex_unlock(&pool.lock);
+
+        const char *error_503 = "HTTP/1.1 503 Service Unavailable\r\nConnection: close\r\n\r\n";
+        write(client_fd, error_503, strlen(error_503));
+        close(client_fd);
+        return;
+    }
+
     Task *new_task = malloc(sizeof(Task));
+    if (new_task == NULL) {
+        perror("[Error] Memory allocation failed for new task");
+        pthread_mutex_unlock(&pool.lock);
+        close(client_fd);
+        return;
+    }
+
     new_task->client_fd = client_fd;
     new_task->next = NULL;
-
-    pthread_mutex_lock(&pool.lock);
 
     if (pool.rear == NULL) {
         pool.front = new_task;
